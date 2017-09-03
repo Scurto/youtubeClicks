@@ -1,0 +1,43 @@
+
+
+<div class="flex-container">
+  <div class="leftPanel background1"></div>
+  <div class="mainPanel">
+    <div class="fieldsArea">
+      <div>
+        <!--<md-input-container>-->
+          <!--<input mdInput placeholder="Task Id" value="" [ngModel]="taskId" (ngModelChange)="onValueChange($event)">-->
+        <!--</md-input-container>-->
+
+        <md-form-field class="example-full-width">
+          <input mdInput placeholder="Task Id" aria-label="Task Id" [mdAutocomplete]="auto" [formControl]="taskCtrl">
+          <md-autocomplete #auto="mdAutocomplete">
+            <md-option *ngFor="let task of filteredYoutubeTasks | async" [value]="task.taskId">
+              <!--<img style="vertical-align:middle;" aria-hidden src="{{state.flag}}" height="25" />-->
+              <span>{{ task.taskId }}</span>
+              <!--<small>Population: {{state.population}}</small>-->
+            </md-option>
+          </md-autocomplete>
+        </md-form-field>
+
+
+      </div>
+      <div>
+        <md-input-container>
+          <input mdInput placeholder="Count Video" value="" [ngModel]="countVideo" class="fieldsArea85Width">
+        </md-input-container>
+        <md-input-container>
+          <input mdInput placeholder="Count Reklama" value="" [ngModel]="countReklama" class="fieldsArea100Width">
+        </md-input-container>
+        <md-input-container>
+          <input mdInput placeholder="Count Move" value="" [ngModel]="countMove" class="fieldsArea85Width">
+        </md-input-container>
+      </div>
+    </div>
+    <div class="resultArea">
+      <div class="resultLeftArea background2"></div>
+      <div class="resultRightArea background5"></div>
+    </div>
+  </div>
+  <div class="rightPanel background3"></div>
+</div>

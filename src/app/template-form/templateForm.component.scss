@@ -1,0 +1,59 @@
+.flex-container {
+
+  display: -webkit-flex; /* Safari */
+
+  display: flex;
+
+}
+
+.background1 {
+  background: lightcoral;
+}
+.background2 {
+  background: lightgreen;
+
+}
+.background3 {
+  background: lightsalmon;
+}
+.background4 {
+  background: yellow;
+}
+.background5 {
+  background: blue;
+}
+.leftPanel {
+  width: 25vw;
+  height: 100vh;
+}
+.mainPanel {
+  width: 50vw;
+  height: 100vh;
+}
+.rightPanel {
+  width: 25vw;
+  height: 100vh;
+}
+.fieldsArea {
+  height: 33vh;
+
+  .fieldsArea85Width {
+    width: 85px;
+  }
+
+  .fieldsArea100Width {
+    width: 100px;
+  }
+}
+.resultArea {
+  width: 100%;
+  height: 67vh;
+  display: inline-flex;
+}
+.resultLeftArea {
+  width: 50vw;
+}
+.resultRightArea {
+  width: 50vw;
+}
+
