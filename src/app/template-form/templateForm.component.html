@@ -20,7 +20,7 @@
           </md-autocomplete>
         </md-form-field>
 
-
+        <button md-raised-button color="primary">Apply</button>
       </div>
       <div>
         <md-input-container>
@@ -32,6 +32,13 @@
         <md-input-container>
           <input mdInput placeholder="Count Move" value="" [ngModel]="countMove" class="fieldsArea85Width">
         </md-input-container>
+      </div>
+
+      <div class="button-row">
+        <button md-raised-button>Basic</button>
+
+        <button md-raised-button color="primary" (click)="clear()">Clear</button>
+        <button md-raised-button color="warn">Warn</button>
       </div>
     </div>
     <div class="resultArea">
