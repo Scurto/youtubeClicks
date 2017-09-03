@@ -22,6 +22,7 @@ export class TemplateFormComponent {
   countVideo: number;
   countReklama: number;
   countMove: number;
+  theHtmlString: string;
 
 
   listYoutubeTasks: YoutubeTask[] = [
@@ -69,6 +70,8 @@ export class TemplateFormComponent {
     this.countVideo = null;
     this.countReklama = null;
     this.countMove = null;
+
+    this.theHtmlString = 'Лето в стране настало,<br>Вереск опять цветет.<br>Но некому готовить<br>Вересковый мед.';
   }
 
 }
