@@ -5,52 +5,47 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/map';
 import {YoutubeTask} from "../shared/YoutubeTask";
+import {DataService} from "../shared/DataService";
 
 @Component({
   moduleId: module.id,
   selector: 'template-form',
   templateUrl: 'templateForm.component.html',
-  styleUrls: ['templateForm.component.scss']
+  styleUrls: ['templateForm.component.scss'],
+  providers: [DataService]
 })
 export class TemplateFormComponent {
 
   taskCtrl: FormControl;
   filteredYoutubeTasks: Observable<YoutubeTask[]>;
 
+  getData: string;
+  postData: string;
+
   title = 'app';
   // mainTaskId: string;
-  countVideo: number;
-  countReklama: number;
-  countMove: number;
+  countVideo: string;
+  countReklama: string;
+  countMove: string;
   theHtmlString: string;
 
 
   listYoutubeTasks: YoutubeTask[] = [
-    {
-      taskId: '1',
-      countOfVideo: 1,
-      countOfReklama: 1,
-      countOfMove: 1
-    },
-    {
-      taskId: '2',
-      countOfVideo: 2,
-      countOfReklama: 2,
-      countOfMove: 2
-    }
+    new YoutubeTask("1"),
+    new YoutubeTask("2"),
+    new YoutubeTask("3")
   ];
 
 
-  constructor() {
+  constructor(private service: DataService) {
+
     this.taskCtrl = new FormControl();
 
     this.taskCtrl.valueChanges.subscribe(state => {
       if (this.filterTasks(state).length == 1) {
         var selectedTask = this.filterTasks(state)[0];
 
-        this.countVideo = selectedTask.countOfVideo;
-        this.countReklama = selectedTask.countOfReklama;
-        this.countMove = selectedTask.countOfMove;
+        this.getTaskModelById(selectedTask.taskId);
       }
     });
 
@@ -72,6 +67,36 @@ export class TemplateFormComponent {
     this.countMove = null;
 
     this.theHtmlString = 'Лето в стране настало,<br>Вереск опять цветет.<br>Но некому готовить<br>Вересковый мед.';
+  }
+
+
+  doGetEvent() {
+    // this.service.getJsonFromServer().
+    this.service.getTaskModelById("1").
+    subscribe(
+      data => {
+        this.getData = JSON.stringify(data);
+        console.log("I CANT SEE DATA HERE: ", this.getData);
+      },
+      // error => alert(error),
+      () => console.log("request completed", this.getData)
+    );
+  }
+
+  getTaskModelById(taskId: string) {
+    this.service.getTaskModelById(taskId).
+    subscribe(
+      data => {
+        this.getData = JSON.stringify(data);
+        // console.log("I CANT SEE DATA HERE: ", this.getData);
+        console.log("I CANT SEE DATA HERE: ", data);
+        this.countVideo = data.countOfVideo;
+        this.countReklama = data.countOfReklama;
+        this.countMove = data.countOfMove;
+      },
+      // error => alert(error),
+      () => console.log("request completed", this.getData)
+    );
   }
 
 }
