@@ -1,4 +1,4 @@
-import {Http, Headers} from "@angular/http";
+import {Http, Headers, URLSearchParams} from "@angular/http";
 import {Injectable} from "@angular/core";
 import 'rxjs/add/operator/map';
 /**
@@ -37,5 +37,22 @@ export class DataService {
         headers: headers
       }
     ).map(res => res.json());
+  }
+
+  youtubeCheck() {
+
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('part', "snippet");
+    params.set('channelId', 'UCrBhVZa7t7D5tZ979eBqO9g');
+    params.set('maxResults', '50');
+    params.set('order', 'date');
+    params.set('key', 'AIzaSyD4uG1sdLHryZMwVDnUQBXXIdvGhAtGquA');
+
+    return  this._http.get("https://www.googleapis.com/youtube/v3/search",
+      {
+        search: params
+      },
+    ).map(res => res.json());
+
   }
 }

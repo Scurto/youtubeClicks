@@ -83,6 +83,23 @@ export class TemplateFormComponent {
     );
   }
 
+  doYoutubeCheck() {
+    this.service.youtubeCheck().
+    subscribe(
+      data => {
+        this.getData = JSON.stringify(data);
+        // console.log("I CANT SEE DATA HERE: ", this.getData);
+        console.log("I CANT SEE DATA HERE: ", data);
+        this.countVideo = data.countOfVideo;
+        this.countReklama = data.countOfReklama;
+        this.countMove = data.countOfMove;
+      },
+      // error => alert(error),
+      () => console.log("request completed", this.getData)
+    );
+
+  }
+
   getTaskModelById(taskId: string) {
     this.service.getTaskModelById(taskId).
     subscribe(
