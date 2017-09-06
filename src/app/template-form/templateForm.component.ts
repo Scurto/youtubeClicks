@@ -84,20 +84,17 @@ export class TemplateFormComponent {
   }
 
   doYoutubeCheck() {
-    this.service.youtubeCheck().
+    this.service.youtubeCheck('UCrBhVZa7t7D5tZ979eBqO9g').
     subscribe(
       data => {
-        this.getData = JSON.stringify(data);
-        // console.log("I CANT SEE DATA HERE: ", this.getData);
-        console.log("I CANT SEE DATA HERE: ", data);
-        this.countVideo = data.countOfVideo;
-        this.countReklama = data.countOfReklama;
-        this.countMove = data.countOfMove;
+        let response: YouTubeVideoList = data;
+
+        for (let i of response.items) {
+          console.log(i.id.videoId); // "4", "5", "6"
+        }
       },
-      // error => alert(error),
       () => console.log("request completed", this.getData)
     );
-
   }
 
   getTaskModelById(taskId: string) {
@@ -114,6 +111,18 @@ export class TemplateFormComponent {
       // error => alert(error),
       () => console.log("request completed", this.getData)
     );
+  }
+
+  testIterator() {
+    // let list = [{a: 1}, {a: 5}, {a: 6}];
+    //
+    // for (let i in list) {
+    //   console.log(i); // "0", "1", "2",
+    // }
+    //
+    // for (let i of list) {
+    //   console.log(i); // "4", "5", "6"
+    // }
   }
 
 }

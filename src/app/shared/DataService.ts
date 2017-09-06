@@ -39,11 +39,11 @@ export class DataService {
     ).map(res => res.json());
   }
 
-  youtubeCheck() {
+  youtubeCheck(chanelId: string) {
 
     let params: URLSearchParams = new URLSearchParams();
     params.set('part', "snippet");
-    params.set('channelId', 'UCrBhVZa7t7D5tZ979eBqO9g');
+    params.set('channelId', chanelId);
     params.set('maxResults', '50');
     params.set('order', 'date');
     params.set('key', 'AIzaSyD4uG1sdLHryZMwVDnUQBXXIdvGhAtGquA');
