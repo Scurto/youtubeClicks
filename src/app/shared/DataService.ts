@@ -1,6 +1,8 @@
 import {Http, Headers, URLSearchParams} from "@angular/http";
 import {Injectable} from "@angular/core";
 import 'rxjs/add/operator/map';
+import {Observable} from "rxjs";
+import {TransferReklamaModel} from "./TransferReklamaModel";
 /**
  * Created by scurto on 04.09.2017.
  */
@@ -22,6 +24,21 @@ export class DataService {
         headers: headers
       }
       ).map(res => res.json());
+  }
+
+  getLastUsedReklama(modelTaskId: string) {
+
+    var json = JSON.stringify({taskId: modelTaskId});
+
+    var headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    return  this._http.post("http://localhost:8080/getTaskModel",
+      json,
+      {
+        headers: headers
+      }
+    ).map(res => res.json());
   }
 
   postJSON() {
@@ -55,4 +72,43 @@ export class DataService {
     ).map(res => res.json());
 
   }
+
+  apply(modelTaskId: string, countReklama: string, countMove: string, countVideo: string) {
+    let json = JSON.stringify({
+      taskId: modelTaskId,
+      countOfReklama: countReklama,
+      countOfMove: countMove,
+      countOfVideo: countVideo
+    });
+
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    return this._http.post("http://localhost:8080/youtube/reklamaListForShow",
+      json,
+      {
+        headers: headers
+      }
+    ).map(res => res.json());
+  }
+
+  applyPromise(modelTaskId: string, countReklama: string, countMove: string, countVideo: string) {
+    let json = JSON.stringify({
+      taskId: modelTaskId,
+      countOfReklama: countReklama,
+      countOfMove: countMove,
+      countOfVideo: countVideo
+    });
+
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    return this._http.post("http://localhost:8080/youtube/reklamaListForShow",
+      json,
+      {
+        headers: headers
+      }
+    );
+  }
+
 }
