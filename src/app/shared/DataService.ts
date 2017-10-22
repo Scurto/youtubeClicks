@@ -1,6 +1,7 @@
 import {Http, Headers, URLSearchParams} from "@angular/http";
 import {Injectable} from "@angular/core";
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/toPromise';
 import {Observable} from "rxjs";
 import {TransferReklamaModel} from "./TransferReklamaModel";
 /**
@@ -23,7 +24,7 @@ export class DataService {
       {
         headers: headers
       }
-      ).map(res => res.json());
+    ).map(res => res.json());
   }
 
   getLastUsedReklama(modelTaskId: string) {
@@ -111,4 +112,31 @@ export class DataService {
     );
   }
 
+  applyPromiseWithYoutubeList(modelTaskId: string, countReklama: string, countMove: string, countVideo: string, listVideo: string[]) {
+    let json = JSON.stringify({
+      taskId: modelTaskId,
+      countOfReklama: countReklama,
+      countOfMove: countMove,
+      countOfVideo: countVideo,
+      listOfVideo: listVideo
+    });
+
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    return this._http.post("http://localhost:8080/youtube/getMixedList",
+      json,
+      {
+        headers: headers
+      }
+    );
+  }
+
+
+  private currentPriceUrl = 'http://api.coindesk.com/v1/bpi/currentprice.json';
+
+  async getPrice(currency: string): Promise<number> {
+    const response = await this._http.get(this.currentPriceUrl).toPromise();
+    return response.json().bpi[currency].rate;
+  }
 }

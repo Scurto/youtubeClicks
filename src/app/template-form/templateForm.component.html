@@ -1,26 +1,23 @@
-
-
 <div class="flex-container">
   <div class="leftPanel background1"></div>
   <div class="mainPanel">
     <div class="fieldsArea">
       <div>
         <!--<md-input-container>-->
-          <!--<input mdInput placeholder="Task Id" value="" [ngModel]="taskId" (ngModelChange)="onValueChange($event)">-->
+        <!--<input mdInput placeholder="Task Id" value="" [ngModel]="taskId" (ngModelChange)="onValueChange($event)">-->
         <!--</md-input-container>-->
 
         <md-form-field class="example-full-width">
           <input mdInput placeholder="Task Id" aria-label="Task Id" [mdAutocomplete]="auto" [formControl]="taskCtrl">
           <md-autocomplete #auto="mdAutocomplete">
             <md-option *ngFor="let task of filteredYoutubeTasks | async" [value]="task.taskId">
-              <!--<img style="vertical-align:middle;" aria-hidden src="{{state.flag}}" height="25" />-->
               <span>{{ task.taskId }}</span>
-              <!--<small>Population: {{state.population}}</small>-->
             </md-option>
           </md-autocomplete>
         </md-form-field>
 
         <button md-raised-button color="primary" (click)="apply()">Apply</button>
+        <button md-fab disabled="{{!isReadyToStart}}" (click)="start()">Start</button>
       </div>
       <div>
         <md-input-container>
@@ -38,8 +35,8 @@
 
 
         <button md-raised-button color="primary" (click)="clear()">Clear</button>
-        <button md-raised-button (click)="doGetEvent()">Test Get</button>
         <button md-raised-button color="warn" (click)="doYoutubeCheck()">doYoutubeCheck</button>
+        <md-button-toggle (click)="doChangeVideoSource($event)" [checked]="toggleVideoSource">{{toggleVideoText}}</md-button-toggle>
       </div>
     </div>
     <div class="resultArea">
