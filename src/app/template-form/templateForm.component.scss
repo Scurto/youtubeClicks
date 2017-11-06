@@ -10,7 +10,8 @@
   background: lightcoral;
 }
 .background2 {
-  background: lightgreen;
+  border: 1px solid black;
+  background: lightgray;
 
 }
 .background3 {
@@ -20,7 +21,8 @@
   background: yellow;
 }
 .background5 {
-  background: blue;
+  border: 1px solid black;
+  background: lightgray;
 }
 .leftPanel {
   width: 25vw;
@@ -33,6 +35,10 @@
 .rightPanel {
   width: 25vw;
   height: 100vh;
+
+  .gClidContainer {
+
+  }
 }
 .fieldsArea {
   height: 33vh;
@@ -59,5 +65,8 @@
 }
 .resultRightArea {
   width: 50vw;
+  .resultRightAreaParagraph {
+    margin: 10px;
+  }
 }
 

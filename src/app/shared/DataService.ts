@@ -42,6 +42,8 @@ export class DataService {
     ).map(res => res.json());
   }
 
+
+
   postJSON() {
     var json = JSON.stringify({var1: "test", var2: 3});
     var params = "json="+json;
@@ -131,6 +133,38 @@ export class DataService {
       }
     );
   }
+
+  updateTask(modelTaskId: string, modelLastReklama: string) {
+    var json = JSON.stringify({
+      taskId: modelTaskId,
+      lastReklama: modelLastReklama
+    });
+
+    var headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    return  this._http.post("http://localhost:8080/youtube/updateTask",
+      json,
+      {
+        headers: headers
+      }
+    ).map(res => res.json());
+  }
+
+  getGClid() {
+
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    return this._http.get("http://localhost:8080/youtube/getGClid",
+      // json,
+      {
+        headers: headers
+      }
+    );
+  }
+
+
 
 
   private currentPriceUrl = 'http://api.coindesk.com/v1/bpi/currentprice.json';

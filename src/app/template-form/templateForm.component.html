@@ -36,15 +36,22 @@
 
         <button md-raised-button color="primary" (click)="clear()">Clear</button>
         <button md-raised-button color="warn" (click)="doYoutubeCheck()">doYoutubeCheck</button>
+        <button md-raised-button color="warn" (click)="doGclidCheck()">doGClidCheck</button>
         <md-button-toggle (click)="doChangeVideoSource($event)" [checked]="toggleVideoSource">{{toggleVideoText}}</md-button-toggle>
       </div>
     </div>
     <div class="resultArea">
       <div class="resultLeftArea background2">
-        <p [innerHTML]="theHtmlString" class="resultLeftAreaParagraph"></p>
+        <p [innerHTML]="startHtmlString" class="resultLeftAreaParagraph"></p>
       </div>
-      <div class="resultRightArea background5"></div>
+      <div class="resultRightArea background5">
+        <p [innerHTML]="finishHtmlString" class="resultLeftAreaParagraph"></p>
+      </div>
     </div>
   </div>
-  <div class="rightPanel background3"></div>
+  <div class="rightPanel background3">
+    <div class="gClidContainer">
+      <p [innerHTML]="gClidContainerString" class="resultLeftAreaParagraph"></p>
+    </div>
+  </div>
 </div>

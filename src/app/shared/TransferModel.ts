@@ -5,5 +5,6 @@ import {TransferVideoModel} from "./TransferVideoModel";
  */
 export class TransferModel {
     transferReklamaModel: TransferReklamaModel[];
-    transferVideoModel: String[];
+    transferVideoModel: string[];
+    transferReklamaKeys: string;
 }

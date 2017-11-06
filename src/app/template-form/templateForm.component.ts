@@ -2,7 +2,7 @@ import {Component, Output} from '@angular/core';
 import {FormControl} from '@angular/forms';
 
 import {Observable} from 'rxjs/Observable';
-
+import 'rxjs/add/observable/interval';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
@@ -35,7 +35,9 @@ export class TemplateFormComponent {
   countVideo: string;
   countReklama: string;
   countMove: string;
-  theHtmlString: string;
+  startHtmlString: string;
+  finishHtmlString: string;
+  gClidContainerString: string;
   selectedTaskId: string;
   prepearedReklamaList: TransferReklamaModel[];
   prepearedModel: TransferModel;
@@ -79,8 +81,9 @@ export class TemplateFormComponent {
     this.countReklama = null;
     this.countMove = null;
     this.taskCtrl.reset();
-    // this.theHtmlString = 'Лето в стране настало,<br>Вереск опять цветет.<br>Но некому готовить<br>Вересковый мед.';
-    this.theHtmlString = '';
+    // this.startHtmlString = 'Лето в стране настало,<br>Вереск опять цветет.<br>Но некому готовить<br>Вересковый мед.';
+    this.startHtmlString = '';
+    this.finishHtmlString = '';
     this.isReadyToStart = false;
   }
 
@@ -106,6 +109,8 @@ export class TemplateFormComponent {
           this.prepearedModel = data.json();
           this.isReadyToStart = true;
           this.prepareTextForShow();
+      }).catch(reason => {
+        console.log('Promise fail', reason);
       });
     } else {
       console.log("ERROR");
@@ -115,40 +120,75 @@ export class TemplateFormComponent {
 
   start() {
     let count = this.prepearedModel.transferVideoModel.length;
-    let timer = TimerObservable.create(0, 3000);
     let myText: string = '';
 
-    this.timerSubscription = timer.subscribe(t => {
 
-      if (t == count) {
-        console.log('last iteration',t);
-        this.stopTimer(t);
-        this.writeResultToDb();
-      } else {
-        myText = myText + this.YOUTUBE + this.prepearedModel.transferVideoModel[t] + '<br>';
+    var timerCounter;
+    if (count < 4) {
+      timerCounter =  150000;
+    } else {
+      timerCounter =  130000;
+    }
 
-        myText = myText + this.prepearedModel.transferReklamaModel[t].gclidLine + '<br>';
+    timerCounter =  3000;
 
-        for (let rekText of this.prepearedModel.transferReklamaModel[t].textLine) {
-          myText = myText + rekText + '<br>';
+    let timer = TimerObservable.create(timerCounter, timerCounter);
+
+    let startDate = new Date();
+    console.log("Call started at " + startDate);
+    this.gClidContainerString = 'Call started at ' + startDate;
+      this.timerSubscription = timer.subscribe(t => {
+
+        if (t == count) {
+          console.log('last iteration',t);
+          this.stopTimer(t);
+          this.writeResultToDb();
+        } else {
+
+          myText = myText + this.YOUTUBE + this.prepearedModel.transferVideoModel[t] + '<br>';
+
+          if (this.prepearedModel.transferReklamaModel[t] != null) {
+            Promise.resolve().then(_ => {
+              return this.service.getGClid().toPromise();
+            }).then(
+              (data)=> {
+                console.log('resp', data.text());
+                myText = myText + this.prepearedModel.transferReklamaModel[t].gclidLine + data.text() + '<br>';
+
+                for (let rekText of this.prepearedModel.transferReklamaModel[t].textLine) {
+                  myText = myText + rekText + '<br>';
+                }
+                myText = myText + '<br>';
+                this.finishHtmlString = myText;
+              }
+            );
+          }
+
+          console.log('iteration', t);
+
         }
-        myText = myText + '<br>';
+      });
 
-        console.log('iteration', t);
-        console.log('myText', myText);
-      }
-    });
+
 
   }
 
 
   stopTimer(timer) {
-    console.log('stopTimer');
+    let stopDate = new Date();
+    console.log('stopTimer', stopDate);
+    this.gClidContainerString = this.gClidContainerString + '\n' + 'Call finished at ' + stopDate;
     this.timerSubscription.unsubscribe();
   }
 
   writeResultToDb() {
-    console.log('write data to db');
+    // console.log('write data to db');
+    // console.log('this.selectedTaskId', this.selectedTaskId);
+    // console.log('this.prepearedModel.transferReklamaKeys', this.prepearedModel.transferReklamaKeys);
+
+    this.service.updateTask(this.selectedTaskId, this.prepearedModel.transferReklamaKeys).toPromise().then(result => {
+      console.log('task completed');
+    });
   }
 
   private prepearedReklamaListObservable() {
@@ -181,7 +221,7 @@ export class TemplateFormComponent {
     }
 
 
-    this.theHtmlString = myText;
+    this.startHtmlString = myText;
   }
 
   doYoutubeCheck() {
@@ -198,6 +238,14 @@ export class TemplateFormComponent {
       },
       () => console.log("request completed")
     );
+  }
+
+  doGclidCheck() {
+    this.service.getGClid().toPromise().then(
+      data => {
+        console.log('data', data.text());
+      }
+    )
   }
 
   getTaskModelById(taskId: string) {
