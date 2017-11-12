@@ -13,6 +13,7 @@ import {OverlayModule} from '@angular/cdk/overlay';
 import {PlatformModule} from '@angular/cdk/platform';
 import {ObserversModule} from '@angular/cdk/observers';
 import {PortalModule} from '@angular/cdk/portal';
+import {YoutubePlayerModule } from 'ngx-youtube-player';
 import {
   MdAutocompleteModule,
   MdButtonModule,
@@ -102,7 +103,7 @@ import {
     OverlayModule,
     PlatformModule,
     PortalModule,
-
+    YoutubePlayerModule,
 
 
     // InMemoryWebApiModule.forRoot(InMemoryDataService, {passThruUnknownUrl: true})

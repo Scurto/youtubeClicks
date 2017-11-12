@@ -148,7 +148,9 @@ export class DataService {
       {
         headers: headers
       }
-    ).map(res => res.json());
+    ).map(res => {
+      console.log("update result->", res);
+    });
   }
 
   getGClid() {

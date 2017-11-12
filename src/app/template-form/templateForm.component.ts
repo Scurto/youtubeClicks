@@ -186,9 +186,11 @@ export class TemplateFormComponent {
     // console.log('this.selectedTaskId', this.selectedTaskId);
     // console.log('this.prepearedModel.transferReklamaKeys', this.prepearedModel.transferReklamaKeys);
 
-    this.service.updateTask(this.selectedTaskId, this.prepearedModel.transferReklamaKeys).toPromise().then(result => {
+    this.service.updateTask(this.selectedTaskId, this.prepearedModel.transferReklamaKeys)
+      .toPromise().then(result => {
       console.log('task completed');
-    });
+    })
+    ;
   }
 
   private prepearedReklamaListObservable() {
@@ -302,6 +304,25 @@ export class TemplateFormComponent {
     // for (let i of list) {
     //   console.log(i); // "4", "5", "6"
     // }
+  }
+
+  id = 'qDuKsiwS5xw';
+  private player;
+  private ytEvent;
+
+  onStateChange(event) {
+    this.ytEvent = event.data;
+  }
+  savePlayer(player) {
+    this.player = player;
+  }
+
+  playVideo() {
+    this.player.playVideo();
+  }
+
+  pauseVideo() {
+    this.player.pauseVideo();
   }
 
 }

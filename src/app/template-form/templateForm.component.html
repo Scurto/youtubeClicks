@@ -53,5 +53,10 @@
     <div class="gClidContainer">
       <p [innerHTML]="gClidContainerString" class="resultLeftAreaParagraph"></p>
     </div>
+    <youtube-player
+      [videoId]="id"
+      (ready)="savePlayer($event)"
+      (change)="onStateChange($event)"
+    ></youtube-player>
   </div>
 </div>
