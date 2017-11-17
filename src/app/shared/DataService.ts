@@ -154,7 +154,7 @@ export class DataService {
   }
 
   getGClid() {
-
+    console.log("getGClid");
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
 

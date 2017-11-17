@@ -1,72 +1,61 @@
-.flex-container {
+body {
+  margin: 0;
+}
 
-  display: -webkit-flex; /* Safari */
-
+.upPanel {
+  height: 270px;
   display: flex;
-
 }
 
-.background1 {
-  background: lightcoral;
+.downPanel {
+  height: 70vh;
+  display: flex;
 }
-.background2 {
-  border: 1px solid black;
-  background: lightgray;
 
+.left {
+  width: 69.5%;
+  height: 100%;
+  display: inline-flex;
+  //background: black;
 }
-.background3 {
-  background: lightsalmon;
-}
-.background4 {
-  background: yellow;
-}
-.background5 {
-  border: 1px solid black;
-  background: lightgray;
-}
-.leftPanel {
-  width: 25vw;
-  height: 100vh;
-}
-.mainPanel {
-  width: 50vw;
-  height: 100vh;
-}
-.rightPanel {
-  width: 25vw;
-  height: 100vh;
 
-  .gClidContainer {
-
-  }
-}
-.fieldsArea {
-  height: 33vh;
-
-  .fieldsArea85Width {
-    width: 85px;
-  }
-
-  .fieldsArea100Width {
-    width: 100px;
-  }
-}
-.resultArea {
-  width: 100%;
-  height: 67vh;
+.right {
+  //background-color: white;
+  height: 100%;
+  width: 30%;
   display: inline-flex;
 }
-.resultLeftArea {
-  width: 50vw;
 
+.resultLeftArea {
+  width: 50%;
+  background: rgba(128, 128, 128, 0.5);
+  border: 1px solid white;
   .resultLeftAreaParagraph {
     margin: 10px;
+    font-size: 12px;
   }
 }
+
 .resultRightArea {
-  width: 50vw;
+  width: 50%;
+  background: rgba(128, 128, 128, 0.5);
+  border: 1px solid white;
   .resultRightAreaParagraph {
     margin: 10px;
+    font-size: 12px;
   }
 }
+
+.fieldsArea85Width {
+  width: 85px;
+}
+
+.fieldsArea100Width {
+  width: 100px;
+}
+
+.fieldsArea120Width {
+  width: 120px;
+}
+
 

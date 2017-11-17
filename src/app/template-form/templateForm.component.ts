@@ -1,4 +1,4 @@
-import {Component, Output} from '@angular/core';
+import {Component, Output, ViewChild} from '@angular/core';
 import {FormControl} from '@angular/forms';
 
 import {Observable} from 'rxjs/Observable';
@@ -35,13 +35,24 @@ export class TemplateFormComponent {
   countVideo: string;
   countReklama: string;
   countMove: string;
+  videoFreeze: number;
+  reklamaFreeze: number;
   startHtmlString: string;
   finishHtmlString: string;
-  gClidContainerString: string;
+  descriptionContainerString: string;
   selectedTaskId: string;
   prepearedReklamaList: TransferReklamaModel[];
   prepearedModel: TransferModel;
   timerSubscription: Subscription;
+  failIterator: number = 0;
+  strategy: string;
+  localVideoId: string = '';
+  private player;
+  private ytEvent;
+  private audio;
+
+  @ViewChild('finishHtml') finishHtml;
+  @ViewChild('descriptioHtml') descriptioHtml;
 
 
   listYoutubeTasks: YoutubeTask[] = [
@@ -80,14 +91,17 @@ export class TemplateFormComponent {
     this.countVideo = null;
     this.countReklama = null;
     this.countMove = null;
+    this.reklamaFreeze = null;
+    this.videoFreeze = null;
     this.taskCtrl.reset();
-    // this.startHtmlString = 'Лето в стране настало,<br>Вереск опять цветет.<br>Но некому готовить<br>Вересковый мед.';
     this.startHtmlString = '';
     this.finishHtmlString = '';
     this.isReadyToStart = false;
+    this.descriptionContainerString = '';
   }
 
   apply() {
+
     if (this.selectedTaskId != null) {
       Promise.resolve().then(_ => {
         if (this.toggleVideoSource) {
@@ -98,7 +112,6 @@ export class TemplateFormComponent {
               for (let i of response.items) {
                 videoList.push(i.id.videoId);
               }
-              console.log('videoList', videoList);
               return this.service.applyPromiseWithYoutubeList(this.selectedTaskId, this.countReklama, this.countMove, this.countVideo, videoList).toPromise();
             }
           );
@@ -106,11 +119,19 @@ export class TemplateFormComponent {
           return this.service.applyPromise(this.selectedTaskId, this.countReklama, this.countMove, this.countVideo).toPromise();
         }
       }).then(data => {
-          this.prepearedModel = data.json();
-          this.isReadyToStart = true;
-          this.prepareTextForShow();
+        this.prepearedModel = data.json();
+        this.isReadyToStart = true;
+        this.prepareTextForShow();
       }).catch(reason => {
         console.log('Promise fail', reason);
+        if (this.failIterator < 10) {
+          this.apply();
+          this.failIterator++;
+        } else {
+          this.failIterator = 0;
+          console.log('ALL BAD');
+        }
+
       });
     } else {
       console.log("ERROR");
@@ -120,77 +141,89 @@ export class TemplateFormComponent {
 
   start() {
     let count = this.prepearedModel.transferVideoModel.length;
-    let myText: string = '';
 
+    const delay = (amount: number) => {
+      return new Promise((resolve) => {
+        setTimeout(resolve, amount);
+      });
+    };
 
-    var timerCounter;
-    if (count < 4) {
-      timerCounter =  150000;
+    this.audio = new Audio();
+    this.audio.src = "http://rt4.funformobile.com/d/841/941/ddhhv2atfi/tvbadboys.mp3";
+    this.audio.load();
+
+    if (this.strategy == 'classic') {
+      classicStrategy(this.service, this.selectedTaskId, this.prepearedModel, this.finishHtml, this.player, this.reklamaFreeze, this.videoFreeze, this.descriptioHtml, this.audio);
     } else {
-      timerCounter =  130000;
+
     }
 
-    timerCounter =  3000;
 
-    let timer = TimerObservable.create(timerCounter, timerCounter);
+    async function classicStrategy(service: DataService, selectedTaskId, prepearedModel, finishHtml, player, reklamaFreeze, videoFreeze, descriptioHtml, audio) {
+      if (service == null ||
+          selectedTaskId == null ||
+          prepearedModel == null ||
+          finishHtml == null||
+          descriptioHtml == null||
+          player == null ||
+          audio == null ||
+          reklamaFreeze == null || videoFreeze == null) {
+            console.log("AHTUNG !!!!");
+            return;
+      }
 
-    let startDate = new Date();
-    console.log("Call started at " + startDate);
-    this.gClidContainerString = 'Call started at ' + startDate;
-      this.timerSubscription = timer.subscribe(t => {
+      let startDelay: number = 10000;
+      let videoDelay: number = videoFreeze * 1000;
+      let primaryReklamaDelay: number = reklamaFreeze * 1000;
+      let secondaryReklamaDelay: number = reklamaFreeze * 1000;
+      let finishDelay: number = 10000;
 
-        if (t == count) {
-          console.log('last iteration',t);
-          this.stopTimer(t);
-          this.writeResultToDb();
-        } else {
+      let descriptionText = '===START AT===' + '<br>';
+      descriptionText = descriptionText + new Date().toString();
+      descriptioHtml.nativeElement.innerHTML = descriptionText + '<br>' + '<br>';
+      player.mute();
+      let YOUTUBE: string = 'https://www.youtube.com/watch?v=';
 
-          myText = myText + this.YOUTUBE + this.prepearedModel.transferVideoModel[t] + '<br>';
+      await delay(startDelay);
 
-          if (this.prepearedModel.transferReklamaModel[t] != null) {
-            Promise.resolve().then(_ => {
-              return this.service.getGClid().toPromise();
-            }).then(
-              (data)=> {
-                console.log('resp', data.text());
-                myText = myText + this.prepearedModel.transferReklamaModel[t].gclidLine + data.text() + '<br>';
 
-                for (let rekText of this.prepearedModel.transferReklamaModel[t].textLine) {
-                  myText = myText + rekText + '<br>';
-                }
-                myText = myText + '<br>';
-                this.finishHtmlString = myText;
-              }
-            );
+      var myText = 'https://www.youtube.com/' + prepearedModel.transferChanelId + '<br>';
+      myText = myText + '<br>';
+
+      for (let i = 0; i < prepearedModel.transferVideoModel.length; i++) {
+        myText = myText + YOUTUBE + prepearedModel.transferVideoModel[i] + '<br>';
+        player.loadVideoById(prepearedModel.transferVideoModel[i]);
+        player.playVideo();
+        finishHtml.nativeElement.innerHTML = myText;
+        await delay(videoDelay);
+        if (prepearedModel.transferReklamaModel[i] != null) {
+          service.getGClid().toPromise().then(result => {
+            myText = myText + prepearedModel.transferReklamaModel[i].gclidLine + result.text() + '<br>';
+            finishHtml.nativeElement.innerHTML = myText;
+          });
+          await delay(primaryReklamaDelay);
+
+          for (let rekText of prepearedModel.transferReklamaModel[i].textLine) {
+            myText = myText + rekText + '<br>';
+            finishHtml.nativeElement.innerHTML = myText;
+            await delay(secondaryReklamaDelay);
           }
-
-          console.log('iteration', t);
-
+          myText = myText + '<br>';
+          finishHtml.nativeElement.innerHTML = myText;
         }
+      }
+
+      await delay(finishDelay);
+      service.updateTask(selectedTaskId, prepearedModel.transferReklamaKeys)
+        .toPromise().then(result => {
+        console.log('task completed');
       });
 
+      descriptionText = descriptionText + '<br>' + '===FINISH AT===' + '<br>' +  new Date().toString()+ '<br>';
+      descriptioHtml.nativeElement.innerHTML = descriptionText;
+      audio.play();
+    }
 
-
-  }
-
-
-  stopTimer(timer) {
-    let stopDate = new Date();
-    console.log('stopTimer', stopDate);
-    this.gClidContainerString = this.gClidContainerString + '\n' + 'Call finished at ' + stopDate;
-    this.timerSubscription.unsubscribe();
-  }
-
-  writeResultToDb() {
-    // console.log('write data to db');
-    // console.log('this.selectedTaskId', this.selectedTaskId);
-    // console.log('this.prepearedModel.transferReklamaKeys', this.prepearedModel.transferReklamaKeys);
-
-    this.service.updateTask(this.selectedTaskId, this.prepearedModel.transferReklamaKeys)
-      .toPromise().then(result => {
-      console.log('task completed');
-    })
-    ;
   }
 
   private prepearedReklamaListObservable() {
@@ -209,14 +242,16 @@ export class TemplateFormComponent {
   private prepareTextForShow() {
 
     let myText: string = '';
+    console.log('this.prepearedModel', this.prepearedModel);
     for (let i = 0; i < this.prepearedModel.transferVideoModel.length; i++) {
 
       myText = myText + this.YOUTUBE + this.prepearedModel.transferVideoModel[i] + '<br>';
+      if (this.prepearedModel.transferReklamaModel[i] != null) {
+        myText = myText + this.prepearedModel.transferReklamaModel[i].gclidLine + '<br>';
 
-      myText = myText + this.prepearedModel.transferReklamaModel[i].gclidLine + '<br>';
-
-      for (let rekText of this.prepearedModel.transferReklamaModel[i].textLine) {
-        myText = myText + rekText + '<br>';
+        for (let rekText of this.prepearedModel.transferReklamaModel[i].textLine) {
+          myText = myText + rekText + '<br>';
+        }
       }
 
       myText = myText + '<br>';
@@ -227,8 +262,7 @@ export class TemplateFormComponent {
   }
 
   doYoutubeCheck() {
-    this.service.youtubeCheck('UCrBhVZa7t7D5tZ979eBqO9g').
-    subscribe(
+    this.service.youtubeCheck('UCrBhVZa7t7D5tZ979eBqO9g').subscribe(
       data => {
         let response: YouTubeVideoList = data;
 
@@ -251,35 +285,46 @@ export class TemplateFormComponent {
   }
 
   getTaskModelById(taskId: string) {
-    switch(taskId) {
+    this.strategy = 'classic';
+    switch (taskId) {
       case "1": {
         this.countVideo = "3";
         this.countReklama = "3";
         this.countMove = "3";
+        this.reklamaFreeze = 30;
+        this.videoFreeze = 30;
         break;
       }
       case "2": {
         this.countVideo = "2";
         this.countReklama = "2";
         this.countMove = "2";
+        this.reklamaFreeze = 30;
+        this.videoFreeze = 30;
         break;
       }
       case "3": {
-        this.countVideo = "3";
+        this.countVideo = "7";
         this.countReklama = "3";
         this.countMove = "3";
+        this.reklamaFreeze = 30;
+        this.videoFreeze = 30;
         break;
       }
       case "4": {
         this.countVideo = "1";
         this.countReklama = "1";
         this.countMove = "1";
+        this.reklamaFreeze = 30;
+        this.videoFreeze = 30;
         break;
       }
       case "5": {
         this.countVideo = "2";
         this.countReklama = "3";
         this.countMove = "2";
+        this.reklamaFreeze = 30;
+        this.videoFreeze = 30;
         break;
       }
       default: {
@@ -291,38 +336,38 @@ export class TemplateFormComponent {
 
   doChangeVideoSource(event) {
     this.toggleVideoSource = !this.toggleVideoSource;
-    this.toggleVideoText =  (this.toggleVideoSource) ? 'Angular' : 'Java';
+    this.toggleVideoText = (this.toggleVideoSource) ? 'Angular' : 'Java';
   }
-
-  testIterator() {
-    // let list = [{a: 1}, {a: 5}, {a: 6}];
-    //
-    // for (let i in list) {
-    //   console.log(i); // "0", "1", "2",
-    // }
-    //
-    // for (let i of list) {
-    //   console.log(i); // "4", "5", "6"
-    // }
-  }
-
-  id = 'qDuKsiwS5xw';
-  private player;
-  private ytEvent;
 
   onStateChange(event) {
     this.ytEvent = event.data;
+
   }
+
   savePlayer(player) {
     this.player = player;
   }
 
-  playVideo() {
-    this.player.playVideo();
+  startMusic() {
+    this.audio.play();
   }
 
-  pauseVideo() {
-    this.player.pauseVideo();
+  stopMusic() {
+    this.audio.pause();
   }
 
 }
+
+// ng build --target=development --environment=dev
+
+// testIterator() {
+  // let list = [{a: 1}, {a: 5}, {a: 6}];
+  //
+  // for (let i in list) {
+  //   console.log(i); // "0", "1", "2",
+  // }
+  //
+  // for (let i of list) {
+  //   console.log(i); // "4", "5", "6"
+  // }
+// }

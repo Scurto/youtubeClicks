@@ -1,12 +1,7 @@
-<div class="flex-container">
-  <div class="leftPanel background1"></div>
-  <div class="mainPanel">
+<div class="upPanel">
+  <div class="left">
     <div class="fieldsArea">
       <div>
-        <!--<md-input-container>-->
-        <!--<input mdInput placeholder="Task Id" value="" [ngModel]="taskId" (ngModelChange)="onValueChange($event)">-->
-        <!--</md-input-container>-->
-
         <md-form-field class="example-full-width">
           <input mdInput placeholder="Task Id" aria-label="Task Id" [mdAutocomplete]="auto" [formControl]="taskCtrl">
           <md-autocomplete #auto="mdAutocomplete">
@@ -20,14 +15,20 @@
         <button md-fab disabled="{{!isReadyToStart}}" (click)="start()">Start</button>
       </div>
       <div>
-        <md-input-container>
-          <input mdInput placeholder="Count Video" value="" [ngModel]="countVideo" class="fieldsArea85Width">
+        <md-input-container class="fieldsArea120Width">
+          <input mdInput placeholder="Count Video" value="" [ngModel]="countVideo">
         </md-input-container>
-        <md-input-container>
-          <input mdInput placeholder="Count Reklama" value="" [ngModel]="countReklama" class="fieldsArea100Width">
+        <md-input-container class="fieldsArea120Width">
+          <input mdInput placeholder="Count Reklama" value="" [ngModel]="countReklama">
         </md-input-container>
-        <md-input-container>
-          <input mdInput placeholder="Count Move" value="" [ngModel]="countMove" class="fieldsArea85Width">
+        <md-input-container class="fieldsArea120Width">
+          <input mdInput placeholder="Count Move" value="" [ngModel]="countMove">
+        </md-input-container>
+        <md-input-container class="fieldsArea100Width">
+          <input mdInput placeholder="Video freeze" value="" [ngModel]="videoFreeze">
+        </md-input-container>
+        <md-input-container class="fieldsArea120Width">
+          <input mdInput placeholder="Reklama freeze" value="" [ngModel]="reklamaFreeze">
         </md-input-container>
       </div>
 
@@ -37,26 +38,35 @@
         <button md-raised-button color="primary" (click)="clear()">Clear</button>
         <button md-raised-button color="warn" (click)="doYoutubeCheck()">doYoutubeCheck</button>
         <button md-raised-button color="warn" (click)="doGclidCheck()">doGClidCheck</button>
-        <md-button-toggle (click)="doChangeVideoSource($event)" [checked]="toggleVideoSource">{{toggleVideoText}}</md-button-toggle>
-      </div>
-    </div>
-    <div class="resultArea">
-      <div class="resultLeftArea background2">
-        <p [innerHTML]="startHtmlString" class="resultLeftAreaParagraph"></p>
-      </div>
-      <div class="resultRightArea background5">
-        <p [innerHTML]="finishHtmlString" class="resultLeftAreaParagraph"></p>
+        <md-button-toggle (click)="doChangeVideoSource($event)" [checked]="toggleVideoSource">{{toggleVideoText}}
+        </md-button-toggle>
+        <button md-raised-button (click)="startMusic()">Start music</button>
+        <button md-raised-button (click)="stopMusic()">Stop music</button>
       </div>
     </div>
   </div>
-  <div class="rightPanel background3">
-    <div class="gClidContainer">
-      <p [innerHTML]="gClidContainerString" class="resultLeftAreaParagraph"></p>
+  <div class="right">
+    <div class="rightPanel">
+      <youtube-player
+        [videoId]="localVideoId"
+        (ready)="savePlayer($event)"
+        (change)="onStateChange($event)"
+      ></youtube-player>
     </div>
-    <youtube-player
-      [videoId]="id"
-      (ready)="savePlayer($event)"
-      (change)="onStateChange($event)"
-    ></youtube-player>
+  </div>
+</div>
+<div class="downPanel">
+  <div class="left">
+      <div class="resultLeftArea">
+        <p [innerHTML]="startHtmlString" class="resultLeftAreaParagraph"></p>
+      </div>
+      <div class="resultRightArea">
+        <p #finishHtml [innerHTML]="finishHtmlString" class="resultRightAreaParagraph"></p>
+      </div>
+  </div>
+  <div class="right">
+    <div class="gClidContainer">
+      <p #descriptioHtml [innerHTML]="descriptionContainerString" class="resultRightAreaParagraph"></p>
+    </div>
   </div>
 </div>
