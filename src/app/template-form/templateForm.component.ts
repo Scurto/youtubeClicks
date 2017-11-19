@@ -60,7 +60,8 @@ export class TemplateFormComponent {
     new YoutubeTask("2"),
     new YoutubeTask("3"),
     new YoutubeTask("4"),
-    new YoutubeTask("5")
+    new YoutubeTask("5"),
+    new YoutubeTask("327158")
   ];
 
 
@@ -154,9 +155,82 @@ export class TemplateFormComponent {
 
     if (this.strategy == 'classic') {
       classicStrategy(this.service, this.selectedTaskId, this.prepearedModel, this.finishHtml, this.player, this.reklamaFreeze, this.videoFreeze, this.descriptioHtml, this.audio);
-    } else {
-
+    } else if (this.strategy == 'rpte') {
+      randomPositionTextEndStrategy(this.service, this.selectedTaskId, this.prepearedModel, this.finishHtml, this.player, this.reklamaFreeze, this.videoFreeze, this.descriptioHtml, this.audio);
     }
+
+
+    async function randomPositionTextEndStrategy(service: DataService, selectedTaskId, prepearedModel, finishHtml, player, reklamaFreeze, videoFreeze, descriptioHtml, audio) {
+      if (service == null ||
+        selectedTaskId == null ||
+        prepearedModel == null ||
+        finishHtml == null||
+        descriptioHtml == null||
+        player == null ||
+        audio == null ||
+        reklamaFreeze == null || videoFreeze == null) {
+        console.log("AHTUNG !!!!");
+        return;
+      }
+
+      // Math.floor(Math.random()*10);
+
+
+      let startDelay: number = 10000;
+      let videoDelay: number = videoFreeze * 1000;
+      let primaryReklamaDelay: number = reklamaFreeze * 1000;
+      let secondaryReklamaDelay: number = reklamaFreeze * 1000;
+      let finishDelay: number = 10000;
+
+      let descriptionText = '===START AT===' + '<br>';
+      descriptionText = descriptionText + new Date().toString();
+      descriptioHtml.nativeElement.innerHTML = descriptionText + '<br>' + '<br>';
+      player.mute();
+      let YOUTUBE: string = 'https://www.youtube.com/watch?v=';
+
+      await delay(startDelay);
+
+
+      var myText = 'https://www.youtube.com/' + prepearedModel.transferChanelId + '<br>';
+      var afterMyText = '';
+      myText = myText + '<br>';
+
+      for (let i = 0; i < prepearedModel.transferVideoModel.length; i++) {
+        myText = myText + YOUTUBE + prepearedModel.transferVideoModel[i] + '<br>';
+        player.loadVideoById(prepearedModel.transferVideoModel[i]);
+        player.playVideo();
+        finishHtml.nativeElement.innerHTML = myText;
+        await delay(videoDelay);
+        if (i == 3 || i == 4 && prepearedModel.transferReklamaModel.length > 0) {
+          service.getGClid().toPromise().then(result => {
+            afterMyText = afterMyText + prepearedModel.transferReklamaModel[0].gclidLine + result.text() + '<br>';
+          });
+          await delay(primaryReklamaDelay);
+
+          for (let rekText of prepearedModel.transferReklamaModel[0].textLine) {
+            afterMyText = afterMyText + rekText + '<br>';
+            await delay(secondaryReklamaDelay);
+          }
+
+          prepearedModel.transferReklamaModel.splice(0, 1);
+
+          afterMyText = afterMyText + '<br>';
+        }
+      }
+
+      finishHtml.nativeElement.innerHTML = myText + '<br>' + afterMyText;
+
+      await delay(finishDelay);
+      service.updateTask(selectedTaskId, prepearedModel.transferReklamaKeys)
+        .toPromise().then(result => {
+        console.log('task completed');
+      });
+
+      descriptionText = descriptionText + '<br>' + '===FINISH AT===' + '<br>' +  new Date().toString()+ '<br>';
+      descriptioHtml.nativeElement.innerHTML = descriptionText;
+      audio.play();
+    }
+
 
 
     async function classicStrategy(service: DataService, selectedTaskId, prepearedModel, finishHtml, player, reklamaFreeze, videoFreeze, descriptioHtml, audio) {
@@ -196,19 +270,20 @@ export class TemplateFormComponent {
         player.playVideo();
         finishHtml.nativeElement.innerHTML = myText;
         await delay(videoDelay);
-        if (prepearedModel.transferReklamaModel[i] != null) {
+        if (prepearedModel.transferReklamaModel.length > 0) {
           service.getGClid().toPromise().then(result => {
-            myText = myText + prepearedModel.transferReklamaModel[i].gclidLine + result.text() + '<br>';
+            myText = myText + prepearedModel.transferReklamaModel[0].gclidLine + result.text() + '<br>';
             finishHtml.nativeElement.innerHTML = myText;
           });
           await delay(primaryReklamaDelay);
 
-          for (let rekText of prepearedModel.transferReklamaModel[i].textLine) {
+          for (let rekText of prepearedModel.transferReklamaModel[0].textLine) {
             myText = myText + rekText + '<br>';
             finishHtml.nativeElement.innerHTML = myText;
             await delay(secondaryReklamaDelay);
           }
           myText = myText + '<br>';
+          prepearedModel.transferReklamaModel.splice(0, 1);
           finishHtml.nativeElement.innerHTML = myText;
         }
       }
@@ -325,6 +400,15 @@ export class TemplateFormComponent {
         this.countMove = "2";
         this.reklamaFreeze = 30;
         this.videoFreeze = 30;
+        break;
+      }
+      case "327158": {
+        this.countVideo = "7";
+        this.countReklama = "2";
+        this.countMove = "2";
+        this.reklamaFreeze = 5;
+        this.videoFreeze = 5;
+        this.strategy = 'rpte';
         break;
       }
       default: {
