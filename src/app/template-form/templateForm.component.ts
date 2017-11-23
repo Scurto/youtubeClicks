@@ -12,6 +12,7 @@ import {TransferReklamaModel} from "../shared/TransferReklamaModel";
 import {TransferModel} from "../shared/TransferModel";
 import {TimerObservable} from "rxjs/observable/TimerObservable";
 import {Subscription} from "rxjs";
+import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   moduleId: module.id,
@@ -32,6 +33,7 @@ export class TemplateFormComponent {
   isReadyToStart: boolean = false;
   title = 'app';
   YOUTUBE: string = 'https://www.youtube.com/watch?v=';
+  googleLink: string = "https://googleads.g.doubleclick.net/pagead/ads?client=ca-pub-2783044520727903&output=html&h=250&slotname=5375124397&adk=2419448805&adf=1842636954&w=300&loeid=38893311&url=http%3A%2F%2Fwww.jqueryscript.net%2F&ea=0&flash=0&wgl=1&adsid=NT&dt=1511261983354&bpp=59&bdt=175&fdt=318&idt=350&shv=r20171113&cbv=r20170110&saldr=sa&correlator=3271859956741&frm=24&ga_vid=1316891360.1511261984&ga_sid=1511261984&ga_hid=725781493&ga_fc=0&pv=2&iag=12&icsg=0&nhd=2&dssz=2&mdo=0&mso=0&u_tz=120&u_his=6&u_java=0&u_h=1080&u_w=1920&u_ah=1080&u_aw=1858&u_cd=24&u_nplug=4&u_nmime=5&adx=0&ady=0&biw=-12245933&bih=-12245933&isw=300&ish=250&ifk=3457247614&eid=21060867%2C21061122%2C38893301&oid=3&nmo=1&zm=4.38&loc=https%3A%2F%2Fwww.jqueryscript.net%2F&rx=0&eae=2&brdim=390%2C128%2C390%2C128%2C1858%2C0%2C1314%2C772%2C300%2C250&vis=1&rsz=%7C%7CcoE%7C&abl=NS&ppjl=f&pfx=0&fu=16&bc=1&jar=2017-11-21-10&ifi=1&dtd=401";
   countVideo: string;
   countReklama: string;
   countMove: string;
@@ -47,6 +49,7 @@ export class TemplateFormComponent {
   failIterator: number = 0;
   strategy: string;
   localVideoId: string = '';
+  showBanner: boolean = false;
   private player;
   private ytEvent;
   private audio;
@@ -61,7 +64,8 @@ export class TemplateFormComponent {
     new YoutubeTask("3"),
     new YoutubeTask("4"),
     new YoutubeTask("5"),
-    new YoutubeTask("327158")
+    new YoutubeTask("327158"),
+    new YoutubeTask("437355"),
   ];
 
 
@@ -142,7 +146,7 @@ export class TemplateFormComponent {
 
   start() {
     let count = this.prepearedModel.transferVideoModel.length;
-
+    let googleLink: string = "https://googleads.g.doubleclick.net/pagead/ads?client=ca-pub-2783044520727903&output=html&h=250&slotname=5375124397&adk=2419448805&adf=1842636954&w=300&loeid=38893311&url=http%3A%2F%2Fwww.jqueryscript.net%2F&ea=0&flash=0&wgl=1&adsid=NT&dt=1511261983354&bpp=59&bdt=175&fdt=318&idt=350&shv=r20171113&cbv=r20170110&saldr=sa&correlator=3271859956741&frm=24&ga_vid=1316891360.1511261984&ga_sid=1511261984&ga_hid=725781493&ga_fc=0&pv=2&iag=12&icsg=0&nhd=2&dssz=2&mdo=0&mso=0&u_tz=120&u_his=6&u_java=0&u_h=1080&u_w=1920&u_ah=1080&u_aw=1858&u_cd=24&u_nplug=4&u_nmime=5&adx=0&ady=0&biw=-12245933&bih=-12245933&isw=300&ish=250&ifk=3457247614&eid=21060867%2C21061122%2C38893301&oid=3&nmo=1&zm=4.38&loc=https%3A%2F%2Fwww.jqueryscript.net%2F&rx=0&eae=2&brdim=390%2C128%2C390%2C128%2C1858%2C0%2C1314%2C772%2C300%2C250&vis=1&rsz=%7C%7CcoE%7C&abl=NS&ppjl=f&pfx=0&fu=16&bc=1&jar=2017-11-21-10&ifi=1&dtd=401";
     const delay = (amount: number) => {
       return new Promise((resolve) => {
         setTimeout(resolve, amount);
@@ -235,24 +239,25 @@ export class TemplateFormComponent {
 
     async function classicStrategy(service: DataService, selectedTaskId, prepearedModel, finishHtml, player, reklamaFreeze, videoFreeze, descriptioHtml, audio) {
       if (service == null ||
-          selectedTaskId == null ||
-          prepearedModel == null ||
-          finishHtml == null||
-          descriptioHtml == null||
-          player == null ||
-          audio == null ||
-          reklamaFreeze == null || videoFreeze == null) {
-            console.log("AHTUNG !!!!");
-            return;
+        selectedTaskId == null ||
+        prepearedModel == null ||
+        finishHtml == null||
+        descriptioHtml == null||
+        player == null ||
+        audio == null ||
+        reklamaFreeze == null || videoFreeze == null) {
+        console.log("AHTUNG !!!!");
+        return;
       }
 
-      let startDelay: number = 10000;
+      let startDelay: number = 35000;
       let videoDelay: number = videoFreeze * 1000;
       let primaryReklamaDelay: number = reklamaFreeze * 1000;
       let secondaryReklamaDelay: number = reklamaFreeze * 1000;
-      let finishDelay: number = 10000;
+      let finishDelay: number = 35000;
 
       let descriptionText = '===START AT===' + '<br>';
+
       descriptionText = descriptionText + new Date().toString();
       descriptioHtml.nativeElement.innerHTML = descriptionText + '<br>' + '<br>';
       player.mute();
@@ -263,7 +268,6 @@ export class TemplateFormComponent {
 
       var myText = 'https://www.youtube.com/' + prepearedModel.transferChanelId + '<br>';
       myText = myText + '<br>';
-
       for (let i = 0; i < prepearedModel.transferVideoModel.length; i++) {
         myText = myText + YOUTUBE + prepearedModel.transferVideoModel[i] + '<br>';
         player.loadVideoById(prepearedModel.transferVideoModel[i]);
@@ -274,6 +278,7 @@ export class TemplateFormComponent {
           service.getGClid().toPromise().then(result => {
             myText = myText + prepearedModel.transferReklamaModel[0].gclidLine + result.text() + '<br>';
             finishHtml.nativeElement.innerHTML = myText;
+            window.open(googleLink, "_blank");
           });
           await delay(primaryReklamaDelay);
 
@@ -352,11 +357,13 @@ export class TemplateFormComponent {
   }
 
   doGclidCheck() {
-    this.service.getGClid().toPromise().then(
-      data => {
-        console.log('data', data.text());
-      }
-    )
+    this.showBanner = !this.showBanner;
+    window.open(this.googleLink, "_blank");
+    // this.service.getGClid().toPromise().then(
+    //   data => {
+    //     console.log('data', data.text());
+    //   }
+    // )
   }
 
   getTaskModelById(taskId: string) {
@@ -406,8 +413,17 @@ export class TemplateFormComponent {
         this.countVideo = "7";
         this.countReklama = "2";
         this.countMove = "2";
-        this.reklamaFreeze = 5;
-        this.videoFreeze = 5;
+        this.reklamaFreeze = 40;
+        this.videoFreeze = 40;
+        this.strategy = 'rpte';
+        break;
+      }
+      case "437355": {
+        this.countVideo = "8";
+        this.countReklama = "2";
+        this.countMove = "3";
+        this.reklamaFreeze = 45;
+        this.videoFreeze = 45;
         this.strategy = 'rpte';
         break;
       }
