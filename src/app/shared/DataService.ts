@@ -27,6 +27,20 @@ export class DataService {
     ).map(res => res.json());
   }
 
+  getListYoutubeTasksId() {
+    var json = JSON.stringify({});
+
+    var headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    return  this._http.post("http://localhost:8080/youtube/listAllTaskModel",
+      json,
+      {
+        headers: headers
+      }
+    ).map(res => res.json());
+  }
+
   getLastUsedReklama(modelTaskId: string) {
 
     var json = JSON.stringify({taskId: modelTaskId});

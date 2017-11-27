@@ -3,8 +3,8 @@ export class YoutubeTask {
   countOfVideo: string;
   countOfReklama: string;
   countOfMove: string;
-  prevDate: string;
-  prevReklama: string;
+  reklamafreeze: number;
+  videoFreeze: number
 
 
   constructor(taskId: string) {
@@ -12,7 +12,5 @@ export class YoutubeTask {
     this.countOfVideo = '';
     this.countOfReklama = '';
     this.countOfMove = '';
-    this.prevDate = '';
-    this.prevReklama = '';
   }
 }

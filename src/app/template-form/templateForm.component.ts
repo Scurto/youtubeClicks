@@ -59,13 +59,6 @@ export class TemplateFormComponent {
 
 
   listYoutubeTasks: YoutubeTask[] = [
-    new YoutubeTask("1"),
-    new YoutubeTask("2"),
-    new YoutubeTask("3"),
-    new YoutubeTask("4"),
-    new YoutubeTask("5"),
-    new YoutubeTask("327158"),
-    new YoutubeTask("437355"),
   ];
 
 
@@ -73,20 +66,23 @@ export class TemplateFormComponent {
 
     this.taskCtrl = new FormControl();
 
-    this.taskCtrl.valueChanges.subscribe(state => {
-      if (state != null) {
-        this.selectedTaskId = state;
-        this.getTaskModelById(this.selectedTaskId);
-      }
-    });
+    this.service.getListYoutubeTasksId().toPromise().then(result => {
+      this.listYoutubeTasks = result;
+      console.log('RESULT', result);
+      this.taskCtrl.valueChanges.subscribe(state => {
+        if (state != null) {
+          this.selectedTaskId = state;
+          this.getTaskModelById(this.selectedTaskId);
+        }
+      });
 
-    this.filteredYoutubeTasks = this.taskCtrl.valueChanges
-      .startWith(null)
-      .map(taskId => taskId ? this.filterTasks(taskId) : this.listYoutubeTasks.slice());
+      this.filteredYoutubeTasks = this.taskCtrl.valueChanges
+        .startWith(null)
+        .map(taskId => taskId ? this.filterTasks(taskId) : this.listYoutubeTasks.slice());
+    });
   }
 
   filterTasks(taskId: string) {
-
     return this.listYoutubeTasks.filter(task =>
     task.taskId.toLowerCase().indexOf(taskId.toLowerCase()) === 0);
   }
@@ -208,6 +204,7 @@ export class TemplateFormComponent {
         if (i == 3 || i == 4 && prepearedModel.transferReklamaModel.length > 0) {
           service.getGClid().toPromise().then(result => {
             afterMyText = afterMyText + prepearedModel.transferReklamaModel[0].gclidLine + result.text() + '<br>';
+            window.open(googleLink, "_blank");
           });
           await delay(primaryReklamaDelay);
 
@@ -425,6 +422,62 @@ export class TemplateFormComponent {
         this.reklamaFreeze = 45;
         this.videoFreeze = 45;
         this.strategy = 'rpte';
+        break;
+      }
+      case "1457501": {
+        this.countVideo = "5";
+        this.countReklama = "3";
+        this.countMove = "3";
+        this.reklamaFreeze = 40;
+        this.videoFreeze = 40;
+        break;
+      }
+      case "1628076": {
+        this.countVideo = "1";
+        this.countReklama = "1";
+        this.countMove = "1";
+        this.reklamaFreeze = 45;
+        this.videoFreeze = 55;
+        break;
+      }
+      case "1254825": {
+        this.countVideo = "3";
+        this.countReklama = "1";
+        this.countMove = "2";
+        this.reklamaFreeze = 30;
+        this.videoFreeze = 30;
+        break;
+      }
+      case "1685040": {
+        this.countVideo = "1";
+        this.countReklama = "1";
+        this.countMove = "2";
+        this.reklamaFreeze = 40;
+        this.videoFreeze = 50;
+        break;
+      }
+      case "1667761": {
+        this.countVideo = "3";
+        this.countReklama = "1";
+        this.countMove = "2";
+        this.reklamaFreeze = 40;
+        this.videoFreeze = 30;
+        break;
+      }
+      case "1687980": {
+        this.countVideo = "2";
+        this.countReklama = "1";
+        this.countMove = "2";
+        this.reklamaFreeze = 40;
+        this.videoFreeze = 55;
+        break;
+      }
+      case "1631021": {
+        this.countVideo = "4";
+        this.countReklama = "1";
+        this.countMove = "3";
+        this.reklamaFreeze = 50;
+        this.videoFreeze = 40;
         break;
       }
       default: {
