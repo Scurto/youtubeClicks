@@ -1,16 +1,20 @@
 export class YoutubeTask {
   taskId: string;
-  countOfVideo: string;
-  countOfReklama: string;
-  countOfMove: string;
-  reklamafreeze: number;
-  videoFreeze: number
+  countVideo: string;
+  countReklama: string;
+  countMove: string;
+  reklamaFreeze: number;
+  videoFreeze: number;
+  strategy: string;
 
 
   constructor(taskId: string) {
     this.taskId = taskId;
-    this.countOfVideo = '';
-    this.countOfReklama = '';
-    this.countOfMove = '';
+    this.countVideo = '';
+    this.countReklama = '';
+    this.countMove = '';
+    this.reklamaFreeze = 40;
+    this.videoFreeze = 40;
+    this.strategy = '';
   }
 }

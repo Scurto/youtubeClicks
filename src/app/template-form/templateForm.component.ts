@@ -72,7 +72,7 @@ export class TemplateFormComponent {
       this.taskCtrl.valueChanges.subscribe(state => {
         if (state != null) {
           this.selectedTaskId = state;
-          this.getTaskModelById(this.selectedTaskId);
+          this.getTaskModelById(this.selectedTaskId, this.listYoutubeTasks);
         }
       });
 
@@ -152,13 +152,11 @@ export class TemplateFormComponent {
     this.audio = new Audio();
     this.audio.src = "http://rt4.funformobile.com/d/841/941/ddhhv2atfi/tvbadboys.mp3";
     this.audio.load();
-
     if (this.strategy == 'classic') {
       classicStrategy(this.service, this.selectedTaskId, this.prepearedModel, this.finishHtml, this.player, this.reklamaFreeze, this.videoFreeze, this.descriptioHtml, this.audio);
     } else if (this.strategy == 'rpte') {
       randomPositionTextEndStrategy(this.service, this.selectedTaskId, this.prepearedModel, this.finishHtml, this.player, this.reklamaFreeze, this.videoFreeze, this.descriptioHtml, this.audio);
     }
-
 
     async function randomPositionTextEndStrategy(service: DataService, selectedTaskId, prepearedModel, finishHtml, player, reklamaFreeze, videoFreeze, descriptioHtml, audio) {
       if (service == null ||
@@ -246,6 +244,7 @@ export class TemplateFormComponent {
         console.log("AHTUNG !!!!");
         return;
       }
+      console.log('test1');
 
       let startDelay: number = 35000;
       let videoDelay: number = videoFreeze * 1000;
@@ -253,6 +252,7 @@ export class TemplateFormComponent {
       let secondaryReklamaDelay: number = reklamaFreeze * 1000;
       let finishDelay: number = 35000;
 
+      console.log('test2');
       let descriptionText = '===START AT===' + '<br>';
 
       descriptionText = descriptionText + new Date().toString();
@@ -355,134 +355,25 @@ export class TemplateFormComponent {
 
   doGclidCheck() {
     this.showBanner = !this.showBanner;
-    window.open(this.googleLink, "_blank");
-    // this.service.getGClid().toPromise().then(
+    // var a = window.open(this.googleLink, "_blank");
+    // console.log('a', a);
+    // this.service.getGClidTest().toPromise().then(
     //   data => {
     //     console.log('data', data.text());
     //   }
     // )
   }
 
-  getTaskModelById(taskId: string) {
-    this.strategy = 'classic';
-    switch (taskId) {
-      case "1": {
-        this.countVideo = "3";
-        this.countReklama = "3";
-        this.countMove = "3";
-        this.reklamaFreeze = 30;
-        this.videoFreeze = 30;
-        break;
-      }
-      case "2": {
-        this.countVideo = "2";
-        this.countReklama = "2";
-        this.countMove = "2";
-        this.reklamaFreeze = 30;
-        this.videoFreeze = 30;
-        break;
-      }
-      case "3": {
-        this.countVideo = "7";
-        this.countReklama = "3";
-        this.countMove = "3";
-        this.reklamaFreeze = 30;
-        this.videoFreeze = 30;
-        break;
-      }
-      case "4": {
-        this.countVideo = "1";
-        this.countReklama = "1";
-        this.countMove = "1";
-        this.reklamaFreeze = 30;
-        this.videoFreeze = 30;
-        break;
-      }
-      case "5": {
-        this.countVideo = "2";
-        this.countReklama = "3";
-        this.countMove = "2";
-        this.reklamaFreeze = 30;
-        this.videoFreeze = 30;
-        break;
-      }
-      case "327158": {
-        this.countVideo = "7";
-        this.countReklama = "2";
-        this.countMove = "2";
-        this.reklamaFreeze = 40;
-        this.videoFreeze = 40;
-        this.strategy = 'rpte';
-        break;
-      }
-      case "437355": {
-        this.countVideo = "8";
-        this.countReklama = "2";
-        this.countMove = "3";
-        this.reklamaFreeze = 45;
-        this.videoFreeze = 45;
-        this.strategy = 'rpte';
-        break;
-      }
-      case "1457501": {
-        this.countVideo = "5";
-        this.countReklama = "3";
-        this.countMove = "3";
-        this.reklamaFreeze = 40;
-        this.videoFreeze = 40;
-        break;
-      }
-      case "1628076": {
-        this.countVideo = "1";
-        this.countReklama = "1";
-        this.countMove = "1";
-        this.reklamaFreeze = 45;
-        this.videoFreeze = 55;
-        break;
-      }
-      case "1254825": {
-        this.countVideo = "3";
-        this.countReklama = "1";
-        this.countMove = "2";
-        this.reklamaFreeze = 30;
-        this.videoFreeze = 30;
-        break;
-      }
-      case "1685040": {
-        this.countVideo = "1";
-        this.countReklama = "1";
-        this.countMove = "2";
-        this.reklamaFreeze = 40;
-        this.videoFreeze = 50;
-        break;
-      }
-      case "1667761": {
-        this.countVideo = "3";
-        this.countReklama = "1";
-        this.countMove = "2";
-        this.reklamaFreeze = 40;
-        this.videoFreeze = 30;
-        break;
-      }
-      case "1687980": {
-        this.countVideo = "2";
-        this.countReklama = "1";
-        this.countMove = "2";
-        this.reklamaFreeze = 40;
-        this.videoFreeze = 55;
-        break;
-      }
-      case "1631021": {
-        this.countVideo = "4";
-        this.countReklama = "1";
-        this.countMove = "3";
-        this.reklamaFreeze = 50;
-        this.videoFreeze = 40;
-        break;
-      }
-      default: {
-        //statements;
-        break;
+  getTaskModelById(taskId: string, listYoutubeTasks: YoutubeTask[]) {
+    console.log('taskId', taskId);
+    for (let task of listYoutubeTasks) {
+      if (taskId == task.taskId) {
+        this.countVideo = task.countVideo;
+        this.countReklama = task.countReklama;
+        this.countMove = task.countMove;
+        this.reklamaFreeze = task.reklamaFreeze;
+        this.videoFreeze = task.videoFreeze;
+        this.strategy = task.strategy;
       }
     }
   }
@@ -514,13 +405,13 @@ export class TemplateFormComponent {
 // ng build --target=development --environment=dev
 
 // testIterator() {
-  // let list = [{a: 1}, {a: 5}, {a: 6}];
-  //
-  // for (let i in list) {
-  //   console.log(i); // "0", "1", "2",
-  // }
-  //
-  // for (let i of list) {
-  //   console.log(i); // "4", "5", "6"
-  // }
+// let list = [{a: 1}, {a: 5}, {a: 6}];
+//
+// for (let i in list) {
+//   console.log(i); // "0", "1", "2",
+// }
+//
+// for (let i of list) {
+//   console.log(i); // "4", "5", "6"
+// }
 // }
