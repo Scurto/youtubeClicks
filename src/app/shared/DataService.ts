@@ -10,7 +10,12 @@ import {TransferReklamaModel} from "./TransferReklamaModel";
 
 @Injectable()
 export class DataService {
+
+
   constructor(private _http: Http) {}
+
+  HTTP_URL: string = 'http://localhost:8080';
+  HTTPS_URL: string = 'https://localhost:8443';
 
   getTaskModelById(modelTaskId: string) {
 
@@ -19,7 +24,7 @@ export class DataService {
     var headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
-    return  this._http.post("http://localhost:8080/getTaskModel",
+    return  this._http.post(this.HTTPS_URL + "/getTaskModel",
       json,
       {
         headers: headers
@@ -33,7 +38,7 @@ export class DataService {
     var headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
-    return  this._http.post("http://localhost:8080/youtube/listAllTaskModel",
+    return  this._http.post(this.HTTPS_URL + "/youtube/listAllTaskModel",
       json,
       {
         headers: headers
@@ -48,7 +53,7 @@ export class DataService {
     var headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
-    return  this._http.post("http://localhost:8080/getTaskModel",
+    return  this._http.post(this.HTTPS_URL + "/getTaskModel",
       json,
       {
         headers: headers
@@ -101,7 +106,7 @@ export class DataService {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
-    return this._http.post("http://localhost:8080/youtube/reklamaListForShow",
+    return this._http.post(this.HTTPS_URL + "/youtube/reklamaListForShow",
       json,
       {
         headers: headers
@@ -120,7 +125,7 @@ export class DataService {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
-    return this._http.post("http://localhost:8080/youtube/reklamaListForShow",
+    return this._http.post(this.HTTPS_URL + "/youtube/reklamaListForShow",
       json,
       {
         headers: headers
@@ -140,7 +145,7 @@ export class DataService {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
-    return this._http.post("http://localhost:8080/youtube/getMixedList",
+    return this._http.post(this.HTTPS_URL + "/youtube/getMixedList",
       json,
       {
         headers: headers
@@ -157,7 +162,7 @@ export class DataService {
     var headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
-    return  this._http.post("http://localhost:8080/youtube/updateTask",
+    return  this._http.post(this.HTTPS_URL + "/youtube/updateTask",
       json,
       {
         headers: headers
@@ -172,7 +177,7 @@ export class DataService {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
-    return this._http.get("http://localhost:8080/youtube/getGClid",
+    return this._http.get(this.HTTPS_URL + "/youtube/getGClid",
       // json,
       {
         headers: headers
