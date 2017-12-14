@@ -338,6 +338,12 @@ export class TemplateFormComponent {
     this.startHtmlString = myText;
   }
 
+  clearGclidTable() {
+    this.service.clearTable().toPromise().then(result => {
+      console.log("CLEARED");
+    });
+  }
+
   doYoutubeCheck() {
     this.service.youtubeCheck('UCrBhVZa7t7D5tZ979eBqO9g').subscribe(
       data => {
