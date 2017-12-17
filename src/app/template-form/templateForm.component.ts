@@ -338,8 +338,15 @@ export class TemplateFormComponent {
     this.startHtmlString = myText;
   }
 
+  // clearGclidTable() {
+  //   this.service.clearTable().toPromise().then(result => {
+  //     console.log("CLEARED");
+  //   });
+  // }
+
   clearGclidTable() {
-    this.service.clearTable().toPromise().then(result => {
+    // this.service.clearTable().toPromise().then(result => {
+    this.service.getListGclids().toPromise().then(result => {
       console.log("CLEARED");
     });
   }

@@ -109,6 +109,20 @@ export class DataService {
     ).map(res => res);
   }
 
+  getListGclids() {
+    var json = JSON.stringify({});
+
+    var headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    return  this._http.post(this.HTTPS_URL + "/gclid/getAllGclids",
+      json,
+      {
+        headers: headers
+      }
+    ).map(res => res);
+  }
+
   apply(modelTaskId: string, countReklama: string, countMove: string, countVideo: string) {
     let json = JSON.stringify({
       taskId: modelTaskId,
