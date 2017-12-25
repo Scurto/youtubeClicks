@@ -120,7 +120,7 @@ export class DataService {
       {
         headers: headers
       }
-    ).map(res => res);
+    ).map(res => res.json());
   }
 
   apply(modelTaskId: string, countReklama: string, countMove: string, countVideo: string) {
