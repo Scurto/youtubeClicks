@@ -14,8 +14,8 @@ export class DataService {
 
   constructor(private _http: Http) {}
 
-  HTTP_URL: string = 'http://localhost:8080';
   HTTPS_URL: string = 'https://localhost:8443';
+  // HTTPS_URL: string = 'http://localhost:8080';
 
   getTaskModelById(modelTaskId: string) {
 
@@ -95,27 +95,17 @@ export class DataService {
 
   }
 
-  clearTable() {
-    var json = JSON.stringify({});
+
+  testJms() {
+    var json = JSON.stringify({
+      time: '1-1',
+      gclid: '123456789'
+    });
 
     var headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
-    return  this._http.post(this.HTTPS_URL + "/gclid/clearGcidTable",
-      json,
-      {
-        headers: headers
-      }
-    ).map(res => res);
-  }
-
-  getListGclids() {
-    var json = JSON.stringify({});
-
-    var headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-
-    return  this._http.post(this.HTTPS_URL + "/gclid/getAllGclids",
+    return  this._http.post(this.HTTPS_URL + "/gclid/testJms",
       json,
       {
         headers: headers

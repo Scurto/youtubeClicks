@@ -272,10 +272,12 @@ export class TemplateFormComponent {
         finishHtml.nativeElement.innerHTML = myText;
         await delay(videoDelay);
         if (prepearedModel.transferReklamaModel.length > 0) {
+          window.open(googleLink, "_blank");
+          await delay(1500);
           service.getGClid().toPromise().then(result => {
             myText = myText + prepearedModel.transferReklamaModel[0].gclidLine + result.text() + '<br>';
             finishHtml.nativeElement.innerHTML = myText;
-            window.open(googleLink, "_blank");
+
           });
           await delay(primaryReklamaDelay);
 
@@ -284,10 +286,11 @@ export class TemplateFormComponent {
             finishHtml.nativeElement.innerHTML = myText;
             await delay(secondaryReklamaDelay);
           }
-          myText = myText + '<br>';
+
           prepearedModel.transferReklamaModel.splice(0, 1);
           finishHtml.nativeElement.innerHTML = myText;
         }
+        myText = myText + '<br>';
       }
 
       await delay(finishDelay);
@@ -323,37 +326,34 @@ export class TemplateFormComponent {
     for (let i = 0; i < this.prepearedModel.transferVideoModel.length; i++) {
 
       myText = myText + this.YOUTUBE + this.prepearedModel.transferVideoModel[i] + '<br>';
-      if (this.prepearedModel.transferReklamaModel[i] != null) {
-        myText = myText + this.prepearedModel.transferReklamaModel[i].gclidLine + '<br>';
-
-        for (let rekText of this.prepearedModel.transferReklamaModel[i].textLine) {
-          myText = myText + rekText + '<br>';
-        }
-      }
-
       myText = myText + '<br>';
     }
 
+    for (let i = 0; i < this.prepearedModel.transferReklamaModel.length; i++) {
+      myText = myText + this.prepearedModel.transferReklamaModel[i].gclidLine + '<br>';
+
+      for (let rekText of this.prepearedModel.transferReklamaModel[i].textLine) {
+          myText = myText + rekText + '<br>';
+      }
+
+      myText = myText + '<br>';
+
+    }
 
     this.startHtmlString = myText;
   }
 
-  // clearGclidTable() {
-  //   this.service.clearTable().toPromise().then(result => {
-  //     console.log("CLEARED");
-  //   });
-  // }
-
-  clearGclidTable() {
-    this.service.clearTable().toPromise().then(result => {
-      console.log("CLEARED");
+  testJms() {
+    this.service.testJms().toPromise().then(result => {
+      console.log("my Gclids", result);
     });
   }
 
-  showGclids() {
-    this.service.getListGclids().toPromise().then(result => {
-      console.log("my Gclids", result);
-    });
+  openGclidPage() {
+    window.open(this.googleLink, "_blank");
+    window.open(this.googleLink, "_blank");
+    window.open(this.googleLink, "_blank");
+    window.open(this.googleLink, "_blank");
   }
 
   doYoutubeCheck() {
