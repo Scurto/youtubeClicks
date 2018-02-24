@@ -50,6 +50,7 @@ export class TemplateFormComponent {
   strategy: string;
   localVideoId: string = '';
   showBanner: boolean = false;
+  autoCloseAdvertiseFlag: boolean = true;
   private player;
   private ytEvent;
   private audio;
@@ -200,9 +201,10 @@ export class TemplateFormComponent {
         finishHtml.nativeElement.innerHTML = myText;
         await delay(videoDelay);
         if (i == 3 || i == 4 && prepearedModel.transferReklamaModel.length > 0) {
+          window.open(googleLink, "_blank");
+          await delay(3000);
           service.getGClid().toPromise().then(result => {
             afterMyText = afterMyText + prepearedModel.transferReklamaModel[0].gclidLine + result.text() + '<br>';
-            window.open(googleLink, "_blank");
           });
           await delay(primaryReklamaDelay);
 
@@ -273,7 +275,7 @@ export class TemplateFormComponent {
         await delay(videoDelay);
         if (prepearedModel.transferReklamaModel.length > 0) {
           window.open(googleLink, "_blank");
-          await delay(1500);
+          await delay(3000);
           service.getGClid().toPromise().then(result => {
             myText = myText + prepearedModel.transferReklamaModel[0].gclidLine + result.text() + '<br>';
             finishHtml.nativeElement.innerHTML = myText;
@@ -416,6 +418,18 @@ export class TemplateFormComponent {
 
   stopMusic() {
     this.audio.pause();
+  }
+
+  autoCloseAdvertise(event) {
+    console.log('event', event.checked);
+    let autoClose: string = event.checked ? "": "no";
+    this.service.autoCloseAdvertise(autoClose).subscribe(
+      data => {
+        console.log("autoCloseAdvertise -> ", data);
+      },
+      // error => alert(error),
+      () => console.log("request completed")
+    );
   }
 
 }

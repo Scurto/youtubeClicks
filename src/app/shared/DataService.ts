@@ -113,6 +113,23 @@ export class DataService {
     ).map(res => res.json());
   }
 
+
+  autoCloseAdvertise(autoClose: string) {
+    var json = JSON.stringify({
+      flag: autoClose
+    });
+
+    var headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    return  this._http.post(this.HTTPS_URL + "/gclid/setAutoCloseAdvertise",
+      json,
+      {
+        headers: headers
+      }
+    ).map(res => res.json());
+  }
+
   apply(modelTaskId: string, countReklama: string, countMove: string, countVideo: string) {
     let json = JSON.stringify({
       taskId: modelTaskId,
@@ -195,7 +212,7 @@ export class DataService {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
-    return this._http.get(this.HTTPS_URL + "/youtube/getGClid",
+    return this._http.get(this.HTTPS_URL + "/gclid/getGClid",
       // json,
       {
         headers: headers
