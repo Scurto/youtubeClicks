@@ -413,6 +413,10 @@ export class TemplateFormComponent {
   }
 
   startMusic() {
+    this.audio = new Audio('assets/audio/test.mp3');
+    // this.audio.src = "https://dll.zf.fm/music/2/a7/imagine_dragons_-_thunder_(zf.fm).mp3";
+    // this.audio.src = "./test.mp3";
+    this.audio.load();
     this.audio.play();
   }
 
